@@ -67,13 +67,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameViewModel.cs" />
-    <Compile Include="Game\GameCommands.cs" />
-    <Compile Include="Game\MoveRequest.cs" />
-    <Compile Include="Game\PlayerContext.cs" />
-    <Compile Include="Game\BoardContext.cs" />
-    <Compile Include="Game\NewGameStarted.cs" />
-    <Compile Include="Game\NewGameRequest.cs" />
-    <Compile Include="Game\PlayerMoved.cs" />
+    <Compile Include="Game\Contexts\GameContext.cs" />
+    <Compile Include="Game\Events\GameOver.cs" />
+    <Compile Include="Game\Events\NextPlayerSelected.cs" />
+    <Compile Include="Game\Requests\PlayerSetRequested.cs" />
+    <Compile Include="Game\Contexts\PlayersContext.cs" />
+    <Compile Include="Game\Contexts\BoardContext.cs" />
+    <Compile Include="Game\Events\NewGameStarted.cs" />
+    <Compile Include="Game\Requests\StartNewGameRequested.cs" />
+    <Compile Include="Game\Events\PlayerSet.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

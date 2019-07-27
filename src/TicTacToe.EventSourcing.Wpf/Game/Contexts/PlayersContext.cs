@@ -1,17 +1,26 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using IctBaden.EventSourcing;
+using TicTacToe.EventSourcing.Wpf.Game.Events;
 
-namespace TicTacToe.EventSourcing.Wpf.Game
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
+
+namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
-    public class PlayerContext : IHandler<NewGameStarted>
+    /// <summary>
+    /// Players context.
+    /// Remember the plural form
+    /// because it represents all participating players.
+    /// You can also model each player separately.
+    /// </summary>
+    public class PlayersContext : IHandler<NewGameStarted>
     {
         public string[] Players { get; private set; }
 
         private int _currentPlayer;
         public string CurrentPlayer => Players[_currentPlayer];
 
-        public PlayerContext()
+        public PlayersContext()
         {
             Players = new[] { "X", "O" };
         }

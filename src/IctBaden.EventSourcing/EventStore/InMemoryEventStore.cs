@@ -6,7 +6,7 @@ namespace IctBaden.EventSourcing.EventStore
 {
     public class InMemoryEventStore : IEventStore
     {
-        public EventSession Session { get; set; }
+        public EventContext Context { get; set; }
 
         private readonly List<Event> _store = new List<Event>();
         private readonly IEventPublisher _publisher;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +8,7 @@ namespace IctBaden.EventSourcing
 {
     public class AppDomainEventPublisher : IEventPublisher
     {
-        public EventSession Session { get; set; }
+        public EventContext Context { get; set; }
 
         private readonly Dictionary<Type, List<Type>> _handlers = new Dictionary<Type, List<Type>>();
 
@@ -66,10 +65,10 @@ namespace IctBaden.EventSourcing
                 else
                 {
                     var ctor1 = handler.GetConstructors()
-                        .FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(EventSession));
+                        .FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(EventContext));
                     if (ctor1 != null)
                     {
-                        instance = Activator.CreateInstance(handler, Session);
+                        instance = Activator.CreateInstance(handler, Context);
                     }
                     else
                     {

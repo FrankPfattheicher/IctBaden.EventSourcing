@@ -5,7 +5,7 @@ namespace IctBaden.EventSourcing
 {
     public interface IEventStore : IDisposable
     {
-        EventSession Session { get; set; }
+        EventContext Context { get; set; }
 
         void Save(Event eventDto);
         void Save(Event[] events);

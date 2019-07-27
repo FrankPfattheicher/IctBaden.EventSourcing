@@ -1,22 +1,22 @@
 ﻿using IctBaden.EventSourcing;
 using IctBaden.EventSourcing.EventStore;
-using TicTacToe.EventSourcing.Wpf.Game;
+using TicTacToe.EventSourcing.Wpf.Game.Requests;
 
 namespace TicTacToe.EventSourcing.Wpf
 {
     public static class Program
     {
-        public static EventSession Session;
+        public static EventContext Context;
 
         public static void Main()
         {
             var publisher = new AppDomainEventPublisher();
             var store = new InMemoryEventStore(publisher);
-            Session = new EventSession(store);
-            store.Session = Session;
-            publisher.Session = Session;
+            Context = new EventContext(store);
+            store.Context = Context;
+            publisher.Context = Context;
 
-            Session.Notify(new NewGameRequest());
+            Context.Notify(new StartNewGameRequested());
 
 
         }

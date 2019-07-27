@@ -1,12 +1,14 @@
-﻿namespace TicTacToe.EventSourcing.Wpf.Game
+﻿// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
+namespace TicTacToe.EventSourcing.Wpf.Game.Events
 {
-    public class PlayerMoved
+    // A player has set to a given place on the board.
+    public class PlayerSet
     {
         public string Player { get; private set; }
         public int Row { get; private set; }
         public int Column { get; private set; }
 
-        public PlayerMoved(string player, int row, int column)
+        public PlayerSet(string player, int row, int column)
         {
             Player = player;
             Row = row;

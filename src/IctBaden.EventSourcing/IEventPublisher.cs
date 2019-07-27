@@ -5,7 +5,7 @@ namespace IctBaden.EventSourcing
 {
     public interface IEventPublisher
     {
-        EventSession Session { get; set; }
+        EventContext Context { get; set; }
 
         Task Publish<T>(T eventDto, CancellationToken cancellationToken = default) where T : Event;
     }

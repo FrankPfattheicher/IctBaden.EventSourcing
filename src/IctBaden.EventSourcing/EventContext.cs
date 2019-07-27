@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 
 namespace IctBaden.EventSourcing
 {
-    public class EventSession
+    public class EventContext
     {
         private readonly IEventStore _store;
-        public EventSession(IEventStore store)
+        public EventContext(IEventStore store)
         {
             _store = store;
         }
@@ -32,7 +30,7 @@ namespace IctBaden.EventSourcing
             foreach (var eventDto in events)
             {
                 var method = contextType.GetMethods()
-                    .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters().First<ParameterInfo>().GetType() == eventDto.GetType());
+                    .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters().First().GetType() == eventDto.GetType());
 
                 method?.Invoke(context, new object[] {eventDto, CancellationToken.None});
             }

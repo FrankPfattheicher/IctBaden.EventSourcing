@@ -1,10 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using IctBaden.EventSourcing;
+using TicTacToe.EventSourcing.Wpf.Game.Events;
 
-namespace TicTacToe.EventSourcing.Wpf.Game
+namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
-    public class BoardContext : IHandler<NewGameStarted>, IHandler<PlayerMoved>
+    /// <summary>
+    /// This is the game's board.
+    /// It exposes all fields of the board with it's set states.
+    /// </summary>
+    public class BoardContext : IHandler<NewGameStarted>, IHandler<PlayerSet>
     {
         public string[][] Board { get; private set; }
 
@@ -18,7 +23,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game
             return Task.FromResult(true);
         }
 
-        public Task<bool> Handle(PlayerMoved eventDto, CancellationToken token = default)
+        public Task<bool> Handle(PlayerSet eventDto, CancellationToken token = default)
         {
             return Task.FromResult(true);
         }
