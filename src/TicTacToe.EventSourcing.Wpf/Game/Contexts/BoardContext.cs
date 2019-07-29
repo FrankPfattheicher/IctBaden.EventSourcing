@@ -1,7 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
 using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
+using TicTacToe.EventSourcing.Wpf.Game.Requests;
 
 namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
@@ -9,24 +10,94 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// This is the game's board.
     /// It exposes all fields of the board with it's set states.
     /// </summary>
-    public class BoardContext : IHandler<NewGameStarted>, IHandler<PlayerSet>
+    public class BoardContext : 
+        IHandler<NewGameStarted>, 
+        IHandler<PlayerSetRequested>,
+        IHandler<PlayerSet>
     {
+        private readonly EventContext _context;
         public string[][] Board { get; private set; }
 
-        public Task<bool> Handle(NewGameStarted eventDto, CancellationToken token = default)
+        public event Action BoardChanged;
+
+        public BoardContext(EventContext context)
+        {
+            _context = context;
+            Handle(new NewGameStarted());
+        }
+
+        public void Handle(NewGameStarted eventDto)
         {
             Board = new string[3][];
-            Board[0] = new[] { "X", " ", " " };
-            Board[1] = new[] { " ", "O", " " };
-            Board[2] = new[] { " ", " ", "X" };
-
-            return Task.FromResult(true);
+            Board[0] = new[] { " ", " ", " " };
+            Board[1] = new[] { " ", " ", " " };
+            Board[2] = new[] { " ", " ", " " };
+            BoardChanged?.Invoke();
         }
 
-        public Task<bool> Handle(PlayerSet eventDto, CancellationToken token = default)
+        public void Handle(PlayerSetRequested eventDto)
         {
-            return Task.FromResult(true);
+            var game = _context.GetContext<GameContext>();
+            if(game.IsOver)
+            {
+                Program.Context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Game is over."));
+                return;
+            }
+
+            if (Board[eventDto.Row][eventDto.Column] != " ")
+            {
+                Program.Context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Field not empty."));
+            }
+            else
+            {
+                Program.Context.Notify(new PlayerSet(eventDto.Player, eventDto.Row, eventDto.Column));
+            }
         }
+
+        public void Handle(PlayerSet eventDto)
+        {
+            Board[eventDto.Row][eventDto.Column] = eventDto.Player;
+            BoardChanged?.Invoke();
+
+            var winner = GetWinner();
+            if (winner != null)
+            {
+                _context.Notify(new GameOver(winner));
+            }
+        }
+
+        public string GetWinner()
+        {
+            // lines
+            if (Board.Any(line => line.All(place => place == "X")))
+                return "X is the winner.";
+            if (Board.Any(line => line.All(place => place == "O")))
+                return "O is the winner.";
+
+            //columns
+            if (Enumerable.Range(0, Board.Length).Any(ix => Board.All(line => line[ix] == "X")))
+                return "X is the winner.";
+            if (Enumerable.Range(0, Board.Length).Any(ix => Board.All(line => line[ix] == "O")))
+                return "O is the winner.";
+
+            //diagonals
+            var diagonals = new[]
+            {
+                new [] { Board[0][0], Board[1][1], Board[2][2] },
+                new [] { Board[0][2], Board[1][1], Board[2][0] }
+            };
+            if (diagonals.Any(line => line.All(place => place == "X")))
+                return "X is the winner.";
+            if (diagonals.Any(line => line.All(place => place == "O")))
+                return "O is the winner.";
+
+            // empty places?
+            if (!Board.Any(line => line.Any(place => place == " ")))
+                return "Nobody wins.";
+
+            return null;
+        }
+
     }
 
 }

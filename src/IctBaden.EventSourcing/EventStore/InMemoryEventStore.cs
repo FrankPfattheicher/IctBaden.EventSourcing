@@ -6,9 +6,7 @@ namespace IctBaden.EventSourcing.EventStore
 {
     public class InMemoryEventStore : IEventStore
     {
-        public EventContext Context { get; set; }
-
-        private readonly List<Event> _store = new List<Event>();
+        private readonly Dictionary<string, List<Event>> _store = new Dictionary<string, List<Event>>();    // one list per stream
         private readonly IEventPublisher _publisher;
 
         public InMemoryEventStore(IEventPublisher publisher)
@@ -20,39 +18,52 @@ namespace IctBaden.EventSourcing.EventStore
         {
         }
 
-        public void Save(Event eventDto)
+        public void Save(string eventStream, Event eventDto)
         {
             lock (_store)
             {
-                _store.Add(eventDto);
-                _publisher.Publish(eventDto).Wait();
+                if (_store.ContainsKey(eventStream))
+                {
+                    _store[eventStream].Add(eventDto);
+                }
+                else
+                {
+                    _store[eventStream] = new List<Event> { eventDto };
+                }
+                    
+                _publisher.Publish(eventStream, eventDto).Wait();
             }
         }
 
-        public void Save(Event[] events)
+        public void Save(string eventStream, Event[] events)
         {
             lock (_store)
             {
                 foreach (var eventDto in events)
                 {
-                    Save(eventDto);
+                    Save(eventStream, eventDto);
                 }
             }
         }
 
-        public IEnumerable<Event> Replay()
+        public IEnumerable<Event> Replay(string eventStream)
         {
             lock (_store)
             {
-                return _store.ToList();
+                var events = new List<Event>();
+                if (_store.ContainsKey(eventStream))
+                {
+                    events = _store[eventStream].ToList();
+                }
+                return events;
             }
         }
 
-        public IEnumerable<Event> Replay(Type[] eventTypes)
+        public IEnumerable<Event> Replay(string eventStream, Type[] eventTypes)
         {
             lock (_store)
             {
-                return _store
+                return Replay(eventStream)
                     .Where(ev => eventTypes.Contains(ev.GetType()))
                     .ToList();
             }

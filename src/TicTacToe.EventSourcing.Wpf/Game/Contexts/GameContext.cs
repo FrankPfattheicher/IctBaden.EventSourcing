@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
 using TicTacToe.EventSourcing.Wpf.Game.Requests;
@@ -9,35 +8,41 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// <summary>
     /// Requests targeting the entire game.
     /// </summary>
-    public class GameContext : IHandler<StartNewGameRequested>, 
-        IHandler<NewGameStarted>, IHandler<GameOver>
+    public class GameContext : 
+        IHandler<StartNewGameRequested>, 
+        IHandler<NewGameStarted>, 
+        IHandler<GameOver>,
+        IHandler<PlayerSet>
     {
         private readonly EventContext _context;
 
-        public bool IsRunning { get; private set; }
+        public bool IsOver { get; private set; }
+
 
         public GameContext(EventContext context)
         {
             _context = context;
         }
 
-        public Task<bool> Handle(StartNewGameRequested eventDto, CancellationToken token = default)
+        public void Handle(StartNewGameRequested eventDto)
         {
             // This is allowed at every time - no checks required.
-            _context.Notify(new NewGameStarted(), token);
-            return Task.FromResult(true);
+            _context.Notify(new NewGameStarted());
         }
 
-        public Task<bool> Handle(NewGameStarted eventDto, CancellationToken token = default)
+        public void Handle(NewGameStarted eventDto)
         {
-            IsRunning = true;
-            return Task.FromResult(true);
+            IsOver = false;
         }
 
-        public Task<bool> Handle(GameOver eventDto, CancellationToken token = default)
+        public void Handle(GameOver eventDto)
         {
-            IsRunning = false;
-            return Task.FromResult(true);
+            IsOver = true;
+        }
+
+        public void Handle(PlayerSet eventDto)
+        {
+            _context.Notify(new NextPlayerSelected());
         }
 
     }

@@ -42,9 +42,41 @@ namespace IctBaden.EventSourcing
             }
         }
 
-        public Task Publish<T>(T eventDto, CancellationToken cancellationToken = default) where T : Event
+        private object GetHandlerInstance(Type handler)
+        {
+            object instance;
+
+            var ctor0 = handler.GetConstructors()
+                .FirstOrDefault(c => c.GetParameters().Length == 0);
+            if (ctor0 != null)
+            {
+                instance = Activator.CreateInstance(handler);
+            }
+            else
+            {
+                var ctor1 = handler.GetConstructors()
+                    .FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(EventContext));
+                if (ctor1 != null)
+                {
+                    instance = Activator.CreateInstance(handler, Context);
+                }
+                else
+                {
+                    throw new NotSupportedException($"Missing ctor fot handler type {handler.Name}.");
+                }
+            }
+
+            return instance;
+        }
+
+
+        public Task Publish<T>(string eventStream, T eventDto, CancellationToken cancellationToken = default) where T : Event
         {
             var eventType = eventDto.GetType();
+            if (!_handlers.ContainsKey(eventType))
+            {
+                throw new NotSupportedException($"Handler for event type {eventType.Name} not defined.");
+            }
             var handlers = _handlers[eventType];
 
             if (!handlers.Any())
@@ -54,30 +86,10 @@ namespace IctBaden.EventSourcing
 
             foreach (var handler in handlers)
             {
-                object instance;
-
-                var ctor0 = handler.GetConstructors()
-                    .FirstOrDefault(c => c.GetParameters().Length == 0);
-                if (ctor0 != null)
-                {
-                    instance = Activator.CreateInstance(handler);
-                }
-                else
-                {
-                    var ctor1 = handler.GetConstructors()
-                        .FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(EventContext));
-                    if (ctor1 != null)
-                    {
-                        instance = Activator.CreateInstance(handler, Context);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException($"Missing ctor fot handler type {handler.Name}.");
-                    }
-                }
+                var instance = Context.GetContext(handler);
                 var method = handler.GetMethods()
                     .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters()[0].ParameterType == eventType);
-                method?.Invoke(instance, new object[] {eventDto, cancellationToken});
+                method?.Invoke(instance, new object[] { eventDto });
             }
 
             return Task.CompletedTask;

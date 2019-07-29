@@ -12,31 +12,39 @@ namespace TicTacToe.EventSourcing.Wpf
     /// </summary>
     class GameViewModel : INotifyPropertyChanged
     {
-        public string[][] GameLines => Program.Context.GetContext<BoardContext>().Board;
-        public string Player => $"Player {Program.Context.GetContext<PlayersContext>().CurrentPlayer}";
+        private readonly GameContext _gameContext;
+        private readonly BoardContext _boardContext;
+        private readonly PlayersContext _playersContext;
+        private readonly MessageContext _messageContext;
 
-        public bool Error { get; private set; }
-        public string Message { get; private set; }
-
-        public Color MessageColor => Error ? Colors.Red : Colors.Blue;
-
+        public string[][] GameLines => _boardContext.Board;
+        public string Player => $"Player {_playersContext.CurrentPlayer}";
+        public string Message => _messageContext.Text;
+        public Color MessageColor => _messageContext.TextColor;
 
         public GameViewModel()
         {
-            Message = "Start playing..";
+            _gameContext = Program.Context.GetContext<GameContext>();
+
+            _boardContext = Program.Context.GetContext<BoardContext>();
+            _boardContext.BoardChanged += () => OnPropertyChanged();
+
+            _playersContext = Program.Context.GetContext<PlayersContext>();
+
+            _messageContext = Program.Context.GetContext<MessageContext>();
+            _messageContext.MessageChanged += () => OnPropertyChanged();
+
+            OnNewGame();
         }
 
         public void OnClick(int row, int col)
         {
-            //Message = _game.Set(row, col);
-            OnPropertyChanged();
+            Program.Context.Notify(new PlayerSetRequested(_playersContext.CurrentPlayer, row, col));
         }
 
         public void OnNewGame()
         {
             Program.Context.Notify(new StartNewGameRequested());
-            Message = string.Empty;
-            OnPropertyChanged();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

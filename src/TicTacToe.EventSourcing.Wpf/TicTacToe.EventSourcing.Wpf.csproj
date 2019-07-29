@@ -68,8 +68,10 @@
     </Compile>
     <Compile Include="GameViewModel.cs" />
     <Compile Include="Game\Contexts\GameContext.cs" />
+    <Compile Include="Game\Contexts\MessageContext.cs" />
     <Compile Include="Game\Events\GameOver.cs" />
     <Compile Include="Game\Events\NextPlayerSelected.cs" />
+    <Compile Include="Game\Events\PlayerSetDenied.cs" />
     <Compile Include="Game\Requests\PlayerSetRequested.cs" />
     <Compile Include="Game\Contexts\PlayersContext.cs" />
     <Compile Include="Game\Contexts\BoardContext.cs" />

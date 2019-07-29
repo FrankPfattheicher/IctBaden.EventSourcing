@@ -4,18 +4,19 @@ using IctBaden.EventSourcing;
 
 namespace TicTacToe.EventSourcing.Wpf.Game.Events
 {
-    // A player has set to a given place on the board.
-    public class PlayerSet : Event
+    public class PlayerSetDenied : Event
     {
         public string Player { get; private set; }
         public int Row { get; private set; }
         public int Column { get; private set; }
+        public string Message { get; private set; }
 
-        public PlayerSet(string player, int row, int column)
+        public PlayerSetDenied(string player, int row, int column, string message)
         {
             Player = player;
             Row = row;
             Column = column;
+            Message = message;
         }
     }
 }

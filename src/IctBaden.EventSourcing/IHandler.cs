@@ -18,12 +18,9 @@ namespace IctBaden.EventSourcing
         ///  Handles a message
         /// </summary>
         /// <param name="eventDto">Event data being handled</param>
-        /// <param name="token">Cancellation token from sender/publisher.</param>
         /// <returns>
-        /// Task that represents handling of message.
-        /// Task should return if event is handled.
         /// </returns>
-        Task<bool> Handle(T eventDto, CancellationToken token = default);
+        void Handle(T eventDto);
     }
 
 }

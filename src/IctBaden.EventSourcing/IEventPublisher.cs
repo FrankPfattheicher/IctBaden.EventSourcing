@@ -7,6 +7,6 @@ namespace IctBaden.EventSourcing
     {
         EventContext Context { get; set; }
 
-        Task Publish<T>(T eventDto, CancellationToken cancellationToken = default) where T : Event;
+        Task Publish<T>(string eventStream, T eventDto, CancellationToken cancellationToken = default) where T : Event;
     }
 }

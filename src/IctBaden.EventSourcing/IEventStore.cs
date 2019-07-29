@@ -5,12 +5,10 @@ namespace IctBaden.EventSourcing
 {
     public interface IEventStore : IDisposable
     {
-        EventContext Context { get; set; }
-
-        void Save(Event eventDto);
-        void Save(Event[] events);
-        IEnumerable<Event> Replay();
-        IEnumerable<Event> Replay(Type[] eventTypes);
+        void Save(string eventStream, Event eventDto);
+        void Save(string eventStream, Event[] events);
+        IEnumerable<Event> Replay(string eventStream);
+        IEnumerable<Event> Replay(string eventStream, Type[] eventTypes);
     }
 
 }

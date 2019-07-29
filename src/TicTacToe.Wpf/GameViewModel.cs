@@ -19,7 +19,7 @@ namespace TicTacToe.Wpf
         public GameViewModel()
         {
             _game = new Game.TicTacToe();
-            Message = "Start playing..";
+            OnNewGame();
         }
 
         public void OnClick(int row, int col)
@@ -31,7 +31,7 @@ namespace TicTacToe.Wpf
         public void OnNewGame()
         {
             _game.NewGame();
-            Message = string.Empty;
+            Message = "Start playing..";
             OnPropertyChanged();
         }
 

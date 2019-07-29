@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using IctBaden.EventSourcing;
+﻿using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
@@ -13,7 +11,9 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// because it represents all participating players.
     /// You can also model each player separately.
     /// </summary>
-    public class PlayersContext : IHandler<NewGameStarted>
+    public class PlayersContext : 
+        IHandler<NewGameStarted>,
+        IHandler<NextPlayerSelected>
     {
         public string[] Players { get; private set; }
 
@@ -25,10 +25,14 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             Players = new[] { "X", "O" };
         }
 
-        public Task<bool> Handle(NewGameStarted eventDto, CancellationToken token = default)
+        public void Handle(NewGameStarted eventDto)
         {
             _currentPlayer = 0;
-            return Task.FromResult(true);
+        }
+
+        public void Handle(NextPlayerSelected eventDto)
+        {
+            _currentPlayer = (_currentPlayer + 1) % Players.Length;
         }
     }
 }
