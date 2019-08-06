@@ -1,7 +1,6 @@
 ﻿using System;
 using IctBaden.EventSourcing;
 using IctBaden.EventSourcing.EventStore;
-using TicTacToe.EventSourcing.Wpf.Game.Requests;
 
 namespace TicTacToe.EventSourcing.Wpf
 {
@@ -12,7 +11,7 @@ namespace TicTacToe.EventSourcing.Wpf
         public static void Main()
         {
             var publisher = new AppDomainEventPublisher();
-            var store = new InMemoryEventStore(publisher);
+            var store = new FileEventStore(publisher);
             Context = new EventContext(Guid.Empty.ToString("N"), store);
             publisher.Context = Context;
         }

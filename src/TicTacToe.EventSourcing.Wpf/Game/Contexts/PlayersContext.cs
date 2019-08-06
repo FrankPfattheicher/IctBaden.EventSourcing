@@ -23,6 +23,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
         public PlayersContext()
         {
             Players = new[] { "X", "O" };
+            _currentPlayer = 0;
         }
 
         public void Handle(NewGameStarted eventDto)

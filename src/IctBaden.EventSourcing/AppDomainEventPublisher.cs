@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,46 +43,20 @@ namespace IctBaden.EventSourcing
             }
         }
 
-        private object GetHandlerInstance(Type handler)
-        {
-            object instance;
-
-            var ctor0 = handler.GetConstructors()
-                .FirstOrDefault(c => c.GetParameters().Length == 0);
-            if (ctor0 != null)
-            {
-                instance = Activator.CreateInstance(handler);
-            }
-            else
-            {
-                var ctor1 = handler.GetConstructors()
-                    .FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(EventContext));
-                if (ctor1 != null)
-                {
-                    instance = Activator.CreateInstance(handler, Context);
-                }
-                else
-                {
-                    throw new NotSupportedException($"Missing ctor fot handler type {handler.Name}.");
-                }
-            }
-
-            return instance;
-        }
-
-
-        public Task Publish<T>(string eventStream, T eventDto, CancellationToken cancellationToken = default) where T : Event
+        public void Publish<T>(string eventStream, T eventDto) where T : Event
         {
             var eventType = eventDto.GetType();
             if (!_handlers.ContainsKey(eventType))
             {
-                throw new NotSupportedException($"Handler for event type {eventType.Name} not defined.");
+                Debug.WriteLine($"Handler for event type {eventType.Name} not defined.");
+                return;
             }
-            var handlers = _handlers[eventType];
 
+            var handlers = _handlers[eventType];
             if (!handlers.Any())
             {
-                throw new NotSupportedException($"Handler for event type {eventType.Name} not defined.");
+                Debug.WriteLine($"Handler for event type {eventType.Name} not defined.");
+                return;
             }
 
             foreach (var handler in handlers)
@@ -91,8 +66,7 @@ namespace IctBaden.EventSourcing
                     .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters()[0].ParameterType == eventType);
                 method?.Invoke(instance, new object[] { eventDto });
             }
-
-            return Task.CompletedTask;
         }
+
     }
 }

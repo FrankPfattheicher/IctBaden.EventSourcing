@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace IctBaden.EventSourcing
 {
@@ -10,6 +9,7 @@ namespace IctBaden.EventSourcing
         private readonly IEventStore _store;
         private readonly string _contextId;
         private readonly Dictionary<Type, object> _contexts = new Dictionary<Type, object>();
+        private bool _replay;
 
         public EventContext(string contextId, IEventStore store)
         {
@@ -17,9 +17,14 @@ namespace IctBaden.EventSourcing
             _store = store;
         }
 
-        public void Notify(Event requestEventDto, CancellationToken cancellationToken = default)
+        public void Request(Request requestDto)
         {
-            _store.Save(_contextId, requestEventDto);
+            _store.Save(_contextId, requestDto);
+        }
+        public void Notify(Event eventDto)
+        {
+            if (_replay) return;
+            _store.Save(_contextId, eventDto);
         }
 
         private void ReplayEvents(object context)
@@ -28,17 +33,20 @@ namespace IctBaden.EventSourcing
             var eventTypes = contextType.GetInterfaces()
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IHandler<>))
                 .Select(i => i.GenericTypeArguments.First())
+                .Where(t => !t.IsSubclassOf(typeof(Request)))
                 .ToArray();
 
             var events =_store.Replay(_contextId, eventTypes);
 
+            _replay = true;
             foreach (var eventDto in events)
             {
                 var method = contextType.GetMethods()
-                    .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters().First().GetType() == eventDto.GetType());
+                    .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters().First().ParameterType == eventDto.GetType());
 
-                method?.Invoke(context, new object[] {eventDto, CancellationToken.None});
+                method?.Invoke(context, new object[] { eventDto });
             }
+            _replay = false;
         }
 
         public T GetContext<T>()

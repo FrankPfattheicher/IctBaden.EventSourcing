@@ -12,7 +12,6 @@ namespace TicTacToe.EventSourcing.Wpf
     /// </summary>
     class GameViewModel : INotifyPropertyChanged
     {
-        private readonly GameContext _gameContext;
         private readonly BoardContext _boardContext;
         private readonly PlayersContext _playersContext;
         private readonly MessageContext _messageContext;
@@ -24,8 +23,6 @@ namespace TicTacToe.EventSourcing.Wpf
 
         public GameViewModel()
         {
-            _gameContext = Program.Context.GetContext<GameContext>();
-
             _boardContext = Program.Context.GetContext<BoardContext>();
             _boardContext.BoardChanged += () => OnPropertyChanged();
 
@@ -33,8 +30,6 @@ namespace TicTacToe.EventSourcing.Wpf
 
             _messageContext = Program.Context.GetContext<MessageContext>();
             _messageContext.MessageChanged += () => OnPropertyChanged();
-
-            OnNewGame();
         }
 
         public void OnClick(int row, int col)

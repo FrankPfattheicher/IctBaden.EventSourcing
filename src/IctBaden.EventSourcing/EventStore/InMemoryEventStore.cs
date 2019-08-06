@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable UnusedMember.Global
 
 namespace IctBaden.EventSourcing.EventStore
 {
+    /// <summary>
+    /// This event store is mainly for test uses.
+    /// It stores all events in memory.
+    /// </summary>
     public class InMemoryEventStore : IEventStore
     {
         private readonly Dictionary<string, List<Event>> _store = new Dictionary<string, List<Event>>();    // one list per stream
@@ -31,7 +36,7 @@ namespace IctBaden.EventSourcing.EventStore
                     _store[eventStream] = new List<Event> { eventDto };
                 }
                     
-                _publisher.Publish(eventStream, eventDto).Wait();
+                _publisher.Publish(eventStream, eventDto);
             }
         }
 

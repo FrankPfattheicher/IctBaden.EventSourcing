@@ -1,5 +1,4 @@
-﻿using System;
-using IctBaden.EventSourcing;
+﻿using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
 using TicTacToe.EventSourcing.Wpf.Game.Requests;
 
@@ -10,6 +9,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// </summary>
     public class GameContext : 
         IHandler<StartNewGameRequested>, 
+        IHandler<SelectNextPlayerRequest>,
         IHandler<NewGameStarted>, 
         IHandler<GameOver>,
         IHandler<PlayerSet>
@@ -30,6 +30,14 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             _context.Notify(new NewGameStarted());
         }
 
+        public void Handle(SelectNextPlayerRequest eventDto)
+        {
+            if (IsOver) return;
+            _context.Notify(new NextPlayerSelected());
+        }
+
+
+
         public void Handle(NewGameStarted eventDto)
         {
             IsOver = false;
@@ -42,7 +50,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 
         public void Handle(PlayerSet eventDto)
         {
-            _context.Notify(new NextPlayerSelected());
+            _context.Notify(new SelectNextPlayerRequest());
         }
 
     }

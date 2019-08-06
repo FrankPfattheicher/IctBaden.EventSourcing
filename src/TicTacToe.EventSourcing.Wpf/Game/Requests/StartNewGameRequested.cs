@@ -5,7 +5,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Requests
     /// <summary>
     /// Request to start a new game.
     /// </summary>
-    public class StartNewGameRequested : Event
+    public class StartNewGameRequested : Request
     {
     }
 }
