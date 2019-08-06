@@ -34,12 +34,12 @@ namespace TicTacToe.EventSourcing.Wpf
 
         public void OnClick(int row, int col)
         {
-            Program.Context.Notify(new PlayerSetRequested(_playersContext.CurrentPlayer, row, col));
+            Program.Context.Request(new PlayerSetRequested(_playersContext.CurrentPlayer, row, col));
         }
 
         public void OnNewGame()
         {
-            Program.Context.Notify(new StartNewGameRequested());
+            Program.Context.Request(new StartNewGameRequested());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

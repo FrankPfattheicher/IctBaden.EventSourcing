@@ -50,7 +50,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 
         public void Handle(PlayerSet eventDto)
         {
-            _context.Notify(new SelectNextPlayerRequest());
+            _context.Request(new SelectNextPlayerRequest());
         }
 
     }

@@ -19,11 +19,16 @@ namespace IctBaden.EventSourcing
 
         public void Request(Request requestDto)
         {
+            if (_replay) return;
             _store.Save(_contextId, requestDto);
         }
         public void Notify(Event eventDto)
         {
             if (_replay) return;
+            if (eventDto.GetType().IsSubclassOf(typeof(Request)))
+            {
+                throw new InvalidOperationException("Use Request() to publish requests.");
+            }
             _store.Save(_contextId, eventDto);
         }
 
