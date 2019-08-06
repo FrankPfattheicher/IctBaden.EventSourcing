@@ -17,10 +17,10 @@
 [CQRS](https://github.com/BoasE/BE.CQRS)
 
 ## Ralf Westphal
-[Command Query Notification Separation (CQNS)](https://ralfw.de/2019/07/command-query-notification-separation-cqns/)
-[Event Sourcing for Constructivist Software](https://ralfw.de/2019/06/event-sourcing-for-constructivist-software/)
-[Food Truck Architecture - It's all about events](1https://ralfw.de/2019/05/food-truck-architecture-its-all-about-events/)
-[Architecture Variations](https://github.com/ralfw/architecture-variations)
+[Command Query Notification Separation (CQNS)](https://ralfw.de/2019/07/command-query-notification-separation-cqns/)    
+[Event Sourcing for Constructivist Software](https://ralfw.de/2019/06/event-sourcing-for-constructivist-software/)    
+[Food Truck Architecture - It's all about events](1https://ralfw.de/2019/05/food-truck-architecture-its-all-about-events/)    
+[Architecture Variations](https://github.com/ralfw/architecture-variations)    
 
 ## Wikidot
 [CQRS Pocket Guide](http://cqrs.wikidot.com/)
