@@ -9,7 +9,6 @@ namespace IctBaden.EventSourcing.EventStore
     public class FileEventStore : IEventStore
     {
         private readonly string _basePath;
-        private readonly IEventPublisher _publisher;
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -17,10 +16,9 @@ namespace IctBaden.EventSourcing.EventStore
             TypeNameHandling = TypeNameHandling.All
         };
 
-        public FileEventStore(IEventPublisher publisher)
+        public FileEventStore(string basePath)
         {
-            _publisher = publisher;
-            _basePath = AppDomain.CurrentDomain.BaseDirectory;
+            _basePath = basePath; 
         }
 
         public void Dispose()
@@ -43,19 +41,20 @@ namespace IctBaden.EventSourcing.EventStore
             return Path.Combine(GetStreamDirectory(eventStream), fileName);
         }
 
-        public void Save(string eventStream, Event eventDto)
+        public bool Save(string eventStream, Event eventDto)
         {
             var json = JsonConvert.SerializeObject(eventDto, Settings);
             File.WriteAllText(GetEventFileName(eventStream, eventDto), json);
-            _publisher.Publish(eventStream, eventDto);
+            return true;
         }
 
-        public void Save(string eventStream, Event[] events)
+        public bool Save(string eventStream, Event[] events)
         {
             foreach (var ev in events)
             {
-                Save(eventStream, ev);
+                if (!Save(eventStream, ev)) return false;
             }
+            return true;
         }
 
         public IEnumerable<Event> Replay(string eventStream)

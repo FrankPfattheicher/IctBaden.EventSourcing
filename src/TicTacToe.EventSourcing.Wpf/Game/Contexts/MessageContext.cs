@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Media;
-using IctBaden.EventSourcing;
+﻿using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
 
 namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
@@ -11,38 +9,30 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
         IHandler<PlayerSet>,
         IHandler<PlayerSetDenied>
     {
-        public bool Error { get; private set; }
-        public string Text { get; private set; }
-        public Color TextColor => Error ? Colors.Red : Colors.Blue;
-
-        public event Action MessageChanged;
+        public string Info { get; private set; }
+        public string Error { get; private set; }
 
         public void Handle(NewGameStarted eventDto)
         {
-            Error = false;
-            Text = "Start playing..";
-            MessageChanged?.Invoke();
+            Info = "Start playing..";
+            Error = "";
         }
 
         public void Handle(GameOver eventDto)
         {
-            Error = false;
-            Text = eventDto.Winner;
-            MessageChanged?.Invoke();
+            Info = eventDto.Winner;
+            Error = "";
         }
 
         public void Handle(PlayerSet eventDto)
         {
-            Error = false;
-            Text = "";
-            MessageChanged?.Invoke();
+            Info = "";
+            Error = "";
         }
 
         public void Handle(PlayerSetDenied eventDto)
         {
-            Error = true;
-            Text = eventDto.Message;
-            MessageChanged?.Invoke();
+            Error = eventDto.Message;
         }
 
     }

@@ -7,8 +7,6 @@ namespace IctBaden.EventSourcing
 {
     public class AppDomainEventPublisher : IEventPublisher
     {
-        public EventContext Context { get; set; }
-
         private readonly Dictionary<Type, List<Type>> _handlers = new Dictionary<Type, List<Type>>();
 
         public AppDomainEventPublisher()
@@ -41,7 +39,7 @@ namespace IctBaden.EventSourcing
             }
         }
 
-        public void Publish<T>(string eventStream, T eventDto) where T : Event
+        public void Publish<T>(EventContext context, T eventDto) where T : Event
         {
             var eventType = eventDto.GetType();
             if (!_handlers.ContainsKey(eventType))
@@ -59,7 +57,7 @@ namespace IctBaden.EventSourcing
 
             foreach (var handler in handlers)
             {
-                var instance = Context.GetContext(handler);
+                var instance = context.GetContextInstance(handler);
                 var method = handler.GetMethods()
                     .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters()[0].ParameterType == eventType);
                 method?.Invoke(instance, new object[] { eventDto });

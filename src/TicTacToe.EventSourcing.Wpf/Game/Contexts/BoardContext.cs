@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
 using TicTacToe.EventSourcing.Wpf.Game.Requests;
@@ -18,8 +17,6 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
         private readonly EventContext _context;
         public string[][] Board { get; private set; }
 
-        public event Action BoardChanged;
-
         public BoardContext(EventContext context)
         {
             _context = context;
@@ -32,32 +29,30 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             Board[0] = new[] { " ", " ", " " };
             Board[1] = new[] { " ", " ", " " };
             Board[2] = new[] { " ", " ", " " };
-            BoardChanged?.Invoke();
         }
 
         public void Handle(PlayerSetRequested eventDto)
         {
-            var game = _context.GetContext<GameContext>();
+            var game = _context.GetContextInstance<GameContext>();
             if(game.IsOver)
             {
-                Program.Context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Game is over."));
+                _context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Game is over."));
                 return;
             }
 
             if (Board[eventDto.Row][eventDto.Column] != " ")
             {
-                Program.Context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Field not empty."));
+                _context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Field not empty."));
             }
             else
             {
-                Program.Context.Notify(new PlayerSet(eventDto.Player, eventDto.Row, eventDto.Column));
+                _context.Notify(new PlayerSet(eventDto.Player, eventDto.Row, eventDto.Column));
             }
         }
 
         public void Handle(PlayerSet eventDto)
         {
             Board[eventDto.Row][eventDto.Column] = eventDto.Player;
-            BoardChanged?.Invoke();
 
             var winner = GetWinner();
             if (winner != null)
@@ -101,3 +96,4 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     }
 
 }
+

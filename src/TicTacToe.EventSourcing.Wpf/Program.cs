@@ -11,9 +11,9 @@ namespace TicTacToe.EventSourcing.Wpf
         public static void Main()
         {
             var publisher = new AppDomainEventPublisher();
-            var store = new FileEventStore(publisher);
-            Context = new EventContext(Guid.Empty.ToString("N"), store);
-            publisher.Context = Context;
+            //var store = new FileEventStore(AppDomain.CurrentDomain.BaseDirectory);
+            var store = new InMemoryEventStore();
+            Context = new EventContext(Guid.Empty.ToString("N"), store, publisher);
         }
     }
 }

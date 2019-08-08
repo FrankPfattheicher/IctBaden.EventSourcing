@@ -6,21 +6,27 @@ namespace IctBaden.EventSourcing
 {
     public class EventContext
     {
+        public string StreamId { get; }
         private readonly IEventStore _store;
-        private readonly string _contextId;
+        private readonly IEventPublisher _publisher;
+
         private readonly Dictionary<Type, object> _contexts = new Dictionary<Type, object>();
         private bool _replay;
 
-        public EventContext(string contextId, IEventStore store)
+        public EventContext(string streamId, IEventStore store, IEventPublisher publisher)
         {
-            _contextId = contextId;
+            StreamId = streamId;
             _store = store;
+            _publisher = publisher;
         }
 
         public void Request(Request requestDto)
         {
             if (_replay) return;
-            _store.Save(_contextId, requestDto);
+            if (_store.Save(StreamId, requestDto))
+            {
+                _publisher.Publish(this, requestDto);
+            }
         }
         public void Notify(Event eventDto)
         {
@@ -29,7 +35,11 @@ namespace IctBaden.EventSourcing
             {
                 throw new InvalidOperationException("Use Request() to publish requests.");
             }
-            _store.Save(_contextId, eventDto);
+
+            if (_store.Save(StreamId, eventDto))
+            {
+                _publisher.Publish(this, eventDto);
+            }
         }
 
         private void ReplayEvents(object context)
@@ -41,7 +51,7 @@ namespace IctBaden.EventSourcing
                 .Where(t => !t.IsSubclassOf(typeof(Request)))
                 .ToArray();
 
-            var events =_store.Replay(_contextId, eventTypes);
+            var events =_store.Replay(StreamId, eventTypes);
 
             _replay = true;
             foreach (var eventDto in events)
@@ -54,26 +64,38 @@ namespace IctBaden.EventSourcing
             _replay = false;
         }
 
-        public T GetContext<T>()
+        // ReSharper disable once UnusedMember.Global
+        public void RegisterContextInstance(object context)
         {
-            var contextType = typeof(T);
-            return (T)GetContext(contextType);
+            var contextType = context.GetType();
+            _contexts[contextType] = context;
         }
 
-        public object GetContext(Type contextType)
+        public T GetContextInstance<T>()
+        {
+            var contextType = typeof(T);
+            return (T)GetContextInstance(contextType);
+        }
+
+        public object GetContextInstance(Type contextType)
         {
             if (_contexts.ContainsKey(contextType))
             {
                 return _contexts[contextType];
             }
 
-            object context;
+            var context = CreateContextInstance(contextType);
+            ReplayEvents(context);
+            return context;
+        }
 
+        private object CreateContextInstance(Type contextType)
+        {
             var ctor0 = contextType.GetConstructors()
                 .FirstOrDefault(c => c.GetParameters().Length == 0);
             if (ctor0 != null)
             {
-                context = Activator.CreateInstance(contextType);
+                return Activator.CreateInstance(contextType);
             }
             else
             {
@@ -81,17 +103,14 @@ namespace IctBaden.EventSourcing
                     .FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(EventContext));
                 if (ctor1 != null)
                 {
-                    context = Activator.CreateInstance(contextType, this);
+                    return Activator.CreateInstance(contextType, this);
                 }
                 else
                 {
                     throw new NotSupportedException($"Missing ctor fot handler type {contextType.Name}.");
                 }
             }
-
-            ReplayEvents(context);
-            _contexts[contextType] = context;
-            return context;
         }
+
     }
 }

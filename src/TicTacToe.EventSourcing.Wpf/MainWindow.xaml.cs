@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using TicTacToe.EventSourcing.Wpf;
 
-namespace TicTacToe.Wpf
+namespace TicTacToe.EventSourcing.Wpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

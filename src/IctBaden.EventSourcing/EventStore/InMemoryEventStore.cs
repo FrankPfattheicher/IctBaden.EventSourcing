@@ -12,18 +12,12 @@ namespace IctBaden.EventSourcing.EventStore
     public class InMemoryEventStore : IEventStore
     {
         private readonly Dictionary<string, List<Event>> _store = new Dictionary<string, List<Event>>();    // one list per stream
-        private readonly IEventPublisher _publisher;
-
-        public InMemoryEventStore(IEventPublisher publisher)
-        {
-            _publisher = publisher;
-        }
 
         public void Dispose()
         {
         }
 
-        public void Save(string eventStream, Event eventDto)
+        public bool Save(string eventStream, Event eventDto)
         {
             lock (_store)
             {
@@ -35,19 +29,19 @@ namespace IctBaden.EventSourcing.EventStore
                 {
                     _store[eventStream] = new List<Event> { eventDto };
                 }
-                    
-                _publisher.Publish(eventStream, eventDto);
+                return true;
             }
         }
 
-        public void Save(string eventStream, Event[] events)
+        public bool Save(string eventStream, Event[] events)
         {
             lock (_store)
             {
                 foreach (var eventDto in events)
                 {
-                    Save(eventStream, eventDto);
+                    if (!Save(eventStream, eventDto)) return false;
                 }
+                return true;
             }
         }
 

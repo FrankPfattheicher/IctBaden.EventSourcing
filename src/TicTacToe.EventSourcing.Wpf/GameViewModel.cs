@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using System.Windows.Media;
+using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Contexts;
 using TicTacToe.EventSourcing.Wpf.Game.Requests;
 using TicTacToe.Wpf.Annotations;
@@ -12,34 +12,35 @@ namespace TicTacToe.EventSourcing.Wpf
     /// </summary>
     class GameViewModel : INotifyPropertyChanged
     {
-        private readonly BoardContext _boardContext;
-        private readonly PlayersContext _playersContext;
-        private readonly MessageContext _messageContext;
+        private readonly EventContext _context;
+        private BoardContext BoardContext => _context.GetContextInstance<BoardContext>();
+        private PlayersContext PlayersContext => _context.GetContextInstance<PlayersContext>();
+        private MessageContext MessageContext => _context.GetContextInstance<MessageContext>();
 
-        public string[][] GameLines => _boardContext.Board;
-        public string Player => $"Player {_playersContext.CurrentPlayer}";
-        public string Message => _messageContext.Text;
-        public Color MessageColor => _messageContext.TextColor;
+        public string[][] GameLines => BoardContext.Board;
+        public string Player => $"Player {PlayersContext.CurrentPlayer}";
+        public string Info => MessageContext.Info;
+        public string Error => MessageContext.Error;
 
         public GameViewModel()
         {
-            _boardContext = Program.Context.GetContext<BoardContext>();
-            _boardContext.BoardChanged += () => OnPropertyChanged();
+            _context = Program.Context;
 
-            _playersContext = Program.Context.GetContext<PlayersContext>();
-
-            _messageContext = Program.Context.GetContext<MessageContext>();
-            _messageContext.MessageChanged += () => OnPropertyChanged();
+            //_context.RegisterContextInstance(BoardContext);
+            //_context.RegisterContextInstance(PlayersContext);
+            //_context.RegisterContextInstance(MessageContext);
         }
 
         public void OnClick(int row, int col)
         {
-            Program.Context.Request(new PlayerSetRequested(_playersContext.CurrentPlayer, row, col));
+            _context.Request(new PlayerSetRequested(PlayersContext.CurrentPlayer, row, col));
+            OnPropertyChanged();
         }
 
         public void OnNewGame()
         {
-            Program.Context.Request(new StartNewGameRequested());
+            _context.Request(new StartNewGameRequested());
+            OnPropertyChanged();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
