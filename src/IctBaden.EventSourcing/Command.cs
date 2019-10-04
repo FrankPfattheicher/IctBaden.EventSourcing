@@ -1,6 +1,6 @@
 ﻿namespace IctBaden.EventSourcing
 {
-    public abstract class Request : Event
+    public abstract class Command : Event
     {
     }
 }

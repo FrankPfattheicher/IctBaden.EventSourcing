@@ -1,4 +1,7 @@
 ﻿using System;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace IctBaden.EventSourcing
 {

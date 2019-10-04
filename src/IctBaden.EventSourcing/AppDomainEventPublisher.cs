@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace IctBaden.EventSourcing
 {
@@ -10,8 +11,14 @@ namespace IctBaden.EventSourcing
         private readonly Dictionary<Type, List<Type>> _handlers = new Dictionary<Type, List<Type>>();
 
         public AppDomainEventPublisher()
+            : this(new Assembly[0])
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        }
+        // ReSharper disable once MemberCanBePrivate.Global
+        public AppDomainEventPublisher(IEnumerable<Assembly> additionalAssemblies)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            assemblies.AddRange(additionalAssemblies);
             var types = assemblies
                 .SelectMany(a => a.GetTypes());
             var handlers = types

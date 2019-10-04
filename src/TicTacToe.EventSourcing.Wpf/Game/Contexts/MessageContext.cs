@@ -3,6 +3,7 @@ using TicTacToe.EventSourcing.Wpf.Game.Events;
 
 namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class MessageContext :
         IHandler<NewGameStarted>,
         IHandler<GameOver>,

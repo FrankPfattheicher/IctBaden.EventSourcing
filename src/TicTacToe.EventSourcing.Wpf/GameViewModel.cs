@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using IctBaden.EventSourcing;
+using TicTacToe.EventSourcing.Wpf.Game.Commands;
 using TicTacToe.EventSourcing.Wpf.Game.Contexts;
-using TicTacToe.EventSourcing.Wpf.Game.Requests;
 using TicTacToe.Wpf.Annotations;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
@@ -33,13 +33,13 @@ namespace TicTacToe.EventSourcing.Wpf
 
         public void OnClick(int row, int col)
         {
-            _context.Request(new PlayerSetRequested(PlayersContext.CurrentPlayer, row, col));
+            _context.ExecuteCommand(new PlayerSetCommand(PlayersContext.CurrentPlayer, row, col));
             OnPropertyChanged();
         }
 
         public void OnNewGame()
         {
-            _context.Request(new StartNewGameRequested());
+            _context.ExecuteCommand(new StartNewGameCommand());
             OnPropertyChanged();
         }
 

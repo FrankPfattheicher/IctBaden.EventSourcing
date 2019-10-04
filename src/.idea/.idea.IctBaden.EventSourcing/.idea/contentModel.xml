@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\ICT Baden\IctBaden.EventSourcing\Links.md" t="Include" />
+    <e p="C:\ICT Baden\IctBaden.EventSourcing\Naming.md" t="Include" />
+    <e p="C:\ICT Baden\IctBaden.EventSourcing\Problems.md" t="Include" />
+    <e p="C:\ICT Baden\IctBaden.EventSourcing\README.md" t="Include" />
+    <e p="C:\ICT Baden\IctBaden.EventSourcing\src" t="IncludeFlat">
+      <e p="IctBaden.EventSourcing" t="IncludeRecursive">
+        <e p="AppDomainEventPublisher.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Command.cs" t="Include" />
+        <e p="Event.cs" t="Include" />
+        <e p="EventContext.cs" t="Include" />
+        <e p="EventStore" t="Include">
+          <e p="FileEventStore.cs" t="Include" />
+          <e p="InMemoryEventStore.cs" t="Include" />
+        </e>
+        <e p="IctBaden.EventSourcing.csproj" t="IncludeRecursive" />
+        <e p="IEventPublisher.cs" t="Include" />
+        <e p="IEventStore.cs" t="Include" />
+        <e p="IHandler.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="IctBaden.EventSourcing.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="IctBaden.EventSourcing.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Solution Items" t="Include" />
+      <e p="TicTacToe.EventSourcing.Test" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="BoardTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="net48" t="Include">
+              <e p="TicTacToe.EventSourcing.Test.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="TicTacToe.EventSourcing.Test.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TicTacToe.EventSourcing.Wpf" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Game" t="Include">
+          <e p="Commands" t="Include">
+            <e p="CommandsHandler.cs" t="Include" />
+            <e p="PlayerSetCommand.cs" t="Include" />
+            <e p="SelectNextPlayerCommand.cs" t="Include" />
+            <e p="StartNewGameCommand.cs" t="Include" />
+          </e>
+          <e p="Contexts" t="Include">
+            <e p="BoardContext.cs" t="Include" />
+            <e p="GameContext.cs" t="Include" />
+            <e p="MessageContext.cs" t="Include" />
+            <e p="PlayersContext.cs" t="Include" />
+          </e>
+          <e p="Events" t="Include">
+            <e p="GameOver.cs" t="Include" />
+            <e p="NewGameStarted.cs" t="Include" />
+            <e p="NextPlayerSelected.cs" t="Include" />
+            <e p="PlayerSet.cs" t="Include" />
+            <e p="PlayerSetDenied.cs" t="Include" />
+          </e>
+        </e>
+        <e p="GameViewModel.cs" t="Include" />
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+          <e p="Settings.Designer.cs" t="Include" />
+          <e p="Settings.settings" t="Include" />
+        </e>
+        <e p="TicTacToe.EventSourcing.Wpf.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="TicTacToe.Wpf" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Game" t="Include">
+          <e p="TicTacToe.cs" t="Include" />
+        </e>
+        <e p="GameViewModel.cs" t="Include" />
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="Annotations.cs" t="Include" />
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+          <e p="Settings.Designer.cs" t="Include" />
+          <e p="Settings.settings" t="Include" />
+        </e>
+        <e p="TicTacToe.Wpf.csproj" t="IncludeRecursive" />
+      </e>
+    </e>
+    <e p="C:\Users\Frank\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\_common\xunit.abstractions.dll" t="Include" />
+    <e p="C:\Users\Frank\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\_common\xunit.runner.reporters.net452.dll" t="Include" />
+    <e p="C:\Users\Frank\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\_common\xunit.runner.utility.net452.dll" t="Include" />
+    <e p="C:\Users\Frank\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\_common\xunit.runner.visualstudio.testadapter.dll" t="Include" />
+    <e p="C:\Users\Frank\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Frank\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_IctBaden.EventSourcing.1650816213.00" t="ExcludeRecursive" />
+  </component>
+</project>

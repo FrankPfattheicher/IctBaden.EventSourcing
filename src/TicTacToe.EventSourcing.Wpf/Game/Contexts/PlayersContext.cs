@@ -1,5 +1,6 @@
 ﻿using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 
@@ -11,6 +12,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// because it represents all participating players.
     /// You can also model each player separately.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class PlayersContext : 
         IHandler<NewGameStarted>,
         IHandler<NextPlayerSelected>

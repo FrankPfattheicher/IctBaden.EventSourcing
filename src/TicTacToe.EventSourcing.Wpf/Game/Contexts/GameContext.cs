@@ -1,15 +1,14 @@
 ﻿using IctBaden.EventSourcing;
+using TicTacToe.EventSourcing.Wpf.Game.Commands;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
-using TicTacToe.EventSourcing.Wpf.Game.Requests;
 
 namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
     /// <summary>
-    /// Requests targeting the entire game.
+    /// The entire game context.
     /// </summary>
-    public class GameContext : 
-        IHandler<StartNewGameRequested>, 
-        IHandler<SelectNextPlayerRequest>,
+    // ReSharper disable once ClassNeverInstantiated.Global
+    public class GameContext :
         IHandler<NewGameStarted>, 
         IHandler<GameOver>,
         IHandler<PlayerSet>
@@ -24,20 +23,6 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             _context = context;
         }
 
-        public void Handle(StartNewGameRequested eventDto)
-        {
-            // This is allowed at every time - no checks required.
-            _context.Notify(new NewGameStarted());
-        }
-
-        public void Handle(SelectNextPlayerRequest eventDto)
-        {
-            if (IsOver) return;
-            _context.Notify(new NextPlayerSelected());
-        }
-
-
-
         public void Handle(NewGameStarted eventDto)
         {
             IsOver = false;
@@ -50,7 +35,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 
         public void Handle(PlayerSet eventDto)
         {
-            _context.Request(new SelectNextPlayerRequest());
+            _context.ExecuteCommand(new SelectNextPlayerCommand());
         }
 
     }

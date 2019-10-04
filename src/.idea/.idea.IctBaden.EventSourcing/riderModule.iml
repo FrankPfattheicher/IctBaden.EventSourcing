@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../../../Links.md" />
+    <content url="file://$MODULE_DIR$/../../../Naming.md" />
+    <content url="file://$MODULE_DIR$/../../../Problems.md" />
+    <content url="file://$MODULE_DIR$/../../../README.md" />
+    <content url="file://$MODULE_DIR$/../.." />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/_common/xunit.abstractions.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/_common/xunit.runner.reporters.net452.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/_common/xunit.runner.utility.net452.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/_common/xunit.runner.visualstudio.testadapter.dll" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

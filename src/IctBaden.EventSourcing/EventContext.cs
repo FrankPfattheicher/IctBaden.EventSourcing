@@ -20,20 +20,20 @@ namespace IctBaden.EventSourcing
             _publisher = publisher;
         }
 
-        public void Request(Request requestDto)
+        public void ExecuteCommand(Command commandDto)
         {
             if (_replay) return;
-            if (_store.Save(StreamId, requestDto))
+            if (_store.Save(StreamId, commandDto))
             {
-                _publisher.Publish(this, requestDto);
+                _publisher.Publish(this, commandDto);
             }
         }
         public void Notify(Event eventDto)
         {
             if (_replay) return;
-            if (eventDto.GetType().IsSubclassOf(typeof(Request)))
+            if (eventDto.GetType().IsSubclassOf(typeof(Command)))
             {
-                throw new InvalidOperationException("Use Request() to publish requests.");
+                throw new InvalidOperationException("Use ExecuteCommand() to issue Commands.");
             }
 
             if (_store.Save(StreamId, eventDto))
@@ -48,7 +48,7 @@ namespace IctBaden.EventSourcing
             var eventTypes = contextType.GetInterfaces()
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IHandler<>))
                 .Select(i => i.GenericTypeArguments.First())
-                .Where(t => !t.IsSubclassOf(typeof(Request)))
+                .Where(t => !t.IsSubclassOf(typeof(Command)))
                 .ToArray();
 
             var events =_store.Replay(StreamId, eventTypes);

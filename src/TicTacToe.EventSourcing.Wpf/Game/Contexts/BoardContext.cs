@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using IctBaden.EventSourcing;
 using TicTacToe.EventSourcing.Wpf.Game.Events;
-using TicTacToe.EventSourcing.Wpf.Game.Requests;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
@@ -9,9 +9,9 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// This is the game's board.
     /// It exposes all fields of the board with it's set states.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class BoardContext : 
         IHandler<NewGameStarted>, 
-        IHandler<PlayerSetRequested>,
         IHandler<PlayerSet>
     {
         private readonly EventContext _context;
@@ -29,25 +29,6 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             Board[0] = new[] { " ", " ", " " };
             Board[1] = new[] { " ", " ", " " };
             Board[2] = new[] { " ", " ", " " };
-        }
-
-        public void Handle(PlayerSetRequested eventDto)
-        {
-            var game = _context.GetContextInstance<GameContext>();
-            if(game.IsOver)
-            {
-                _context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Game is over."));
-                return;
-            }
-
-            if (Board[eventDto.Row][eventDto.Column] != " ")
-            {
-                _context.Notify(new PlayerSetDenied(eventDto.Player, eventDto.Row, eventDto.Column, "Field not empty."));
-            }
-            else
-            {
-                _context.Notify(new PlayerSet(eventDto.Player, eventDto.Row, eventDto.Column));
-            }
         }
 
         public void Handle(PlayerSet eventDto)
@@ -93,6 +74,14 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             return null;
         }
 
+        public override string ToString()
+        {
+            var text = $"{Board[0][0]}.{Board[0][1]}.{Board[0][2]}|"
+                   + $"{Board[1][0]}.{Board[1][1]}.{Board[1][2]}|"
+                   + $"{Board[2][0]}.{Board[2][1]}.{Board[2][2]}";
+
+            return text.Replace(" ", "_");
+        }
     }
 
 }
