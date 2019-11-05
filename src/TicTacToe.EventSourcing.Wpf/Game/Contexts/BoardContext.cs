@@ -11,8 +11,8 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
     public class BoardContext : 
-        IHandler<NewGameStarted>, 
-        IHandler<PlayerSet>
+        IEventHandler<NewGameStarted>, 
+        IEventHandler<PlayerSet>
     {
         private readonly EventContext _context;
         public string[][] Board { get; private set; }
@@ -20,10 +20,10 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
         public BoardContext(EventContext context)
         {
             _context = context;
-            Handle(new NewGameStarted());
+            Apply(new NewGameStarted());
         }
 
-        public void Handle(NewGameStarted eventDto)
+        public void Apply(NewGameStarted eventDto)
         {
             Board = new string[3][];
             Board[0] = new[] { " ", " ", " " };
@@ -31,7 +31,7 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             Board[2] = new[] { " ", " ", " " };
         }
 
-        public void Handle(PlayerSet eventDto)
+        public void Apply(PlayerSet eventDto)
         {
             Board[eventDto.Row][eventDto.Column] = eventDto.Player;
 

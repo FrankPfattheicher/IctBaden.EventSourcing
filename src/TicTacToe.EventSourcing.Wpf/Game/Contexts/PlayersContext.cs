@@ -14,8 +14,8 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
     public class PlayersContext : 
-        IHandler<NewGameStarted>,
-        IHandler<NextPlayerSelected>
+        IEventHandler<NewGameStarted>,
+        IEventHandler<NextPlayerSelected>
     {
         public string[] Players { get; private set; }
 
@@ -28,12 +28,12 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             _currentPlayer = 0;
         }
 
-        public void Handle(NewGameStarted eventDto)
+        public void Apply(NewGameStarted eventDto)
         {
             _currentPlayer = 0;
         }
 
-        public void Handle(NextPlayerSelected eventDto)
+        public void Apply(NextPlayerSelected eventDto)
         {
             _currentPlayer = (_currentPlayer + 1) % Players.Length;
         }

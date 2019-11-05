@@ -9,9 +9,9 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
     public class GameContext :
-        IHandler<NewGameStarted>, 
-        IHandler<GameOver>,
-        IHandler<PlayerSet>
+        IEventHandler<NewGameStarted>, 
+        IEventHandler<GameOver>,
+        IEventHandler<PlayerSet>
     {
         private readonly EventContext _context;
 
@@ -23,17 +23,17 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
             _context = context;
         }
 
-        public void Handle(NewGameStarted eventDto)
+        public void Apply(NewGameStarted eventDto)
         {
             IsOver = false;
         }
 
-        public void Handle(GameOver eventDto)
+        public void Apply(GameOver eventDto)
         {
             IsOver = true;
         }
 
-        public void Handle(PlayerSet eventDto)
+        public void Apply(PlayerSet eventDto)
         {
             _context.ExecuteCommand(new SelectNextPlayerCommand());
         }

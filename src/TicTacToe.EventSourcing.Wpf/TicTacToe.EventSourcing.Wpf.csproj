@@ -70,7 +70,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameViewModel.cs" />
-    <Compile Include="Game\Commands\CommandsHandler.cs" />
+    <Compile Include="Game\Commands\CommandsEventHandler.cs" />
     <Compile Include="Game\Contexts\GameContext.cs" />
     <Compile Include="Game\Contexts\MessageContext.cs" />
     <Compile Include="Game\Events\GameOver.cs" />

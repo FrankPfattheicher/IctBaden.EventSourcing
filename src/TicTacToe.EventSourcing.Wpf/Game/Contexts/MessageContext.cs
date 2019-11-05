@@ -5,33 +5,33 @@ namespace TicTacToe.EventSourcing.Wpf.Game.Contexts
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MessageContext :
-        IHandler<NewGameStarted>,
-        IHandler<GameOver>,
-        IHandler<PlayerSet>,
-        IHandler<PlayerSetDenied>
+        IEventHandler<NewGameStarted>,
+        IEventHandler<GameOver>,
+        IEventHandler<PlayerSet>,
+        IEventHandler<PlayerSetDenied>
     {
         public string Info { get; private set; }
         public string Error { get; private set; }
 
-        public void Handle(NewGameStarted eventDto)
+        public void Apply(NewGameStarted eventDto)
         {
             Info = "Start playing..";
             Error = "";
         }
 
-        public void Handle(GameOver eventDto)
+        public void Apply(GameOver eventDto)
         {
             Info = eventDto.Winner;
             Error = "";
         }
 
-        public void Handle(PlayerSet eventDto)
+        public void Apply(PlayerSet eventDto)
         {
             Info = "";
             Error = "";
         }
 
-        public void Handle(PlayerSetDenied eventDto)
+        public void Apply(PlayerSetDenied eventDto)
         {
             Error = eventDto.Message;
         }

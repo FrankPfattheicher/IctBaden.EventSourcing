@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace IctBaden.EventSourcing
 {
@@ -22,12 +24,13 @@ namespace IctBaden.EventSourcing
 
         public void ExecuteCommand(Command commandDto)
         {
-            if (_replay) return;
-            if (_store.Save(StreamId, commandDto))
+            if (_replay)
             {
-                _publisher.Publish(this, commandDto);
+                return;
             }
+            _publisher.Handle(this, commandDto);
         }
+        
         public void Notify(Event eventDto)
         {
             if (_replay) return;
@@ -46,7 +49,7 @@ namespace IctBaden.EventSourcing
         {
             var contextType = context.GetType();
             var eventTypes = contextType.GetInterfaces()
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IHandler<>))
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>))
                 .Select(i => i.GenericTypeArguments.First())
                 .Where(t => !t.IsSubclassOf(typeof(Command)))
                 .ToArray();
@@ -57,7 +60,7 @@ namespace IctBaden.EventSourcing
             foreach (var eventDto in events)
             {
                 var method = contextType.GetMethods()
-                    .FirstOrDefault(m => m.Name == "Handle" && m.GetParameters().First().ParameterType == eventDto.GetType());
+                    .FirstOrDefault(m => m.Name == "Apply" && m.GetParameters().First().ParameterType == eventDto.GetType());
 
                 method?.Invoke(context, new object[] { eventDto });
             }

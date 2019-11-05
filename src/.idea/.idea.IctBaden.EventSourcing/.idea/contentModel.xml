@@ -16,10 +16,11 @@
           <e p="FileEventStore.cs" t="Include" />
           <e p="InMemoryEventStore.cs" t="Include" />
         </e>
+        <e p="ICommandHandler .cs" t="Include" />
         <e p="IctBaden.EventSourcing.csproj" t="IncludeRecursive" />
+        <e p="IEventHandler.cs" t="Include" />
         <e p="IEventPublisher.cs" t="Include" />
         <e p="IEventStore.cs" t="Include" />
-        <e p="IHandler.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netstandard2.0" t="Include">
@@ -50,7 +51,7 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="Game" t="Include">
           <e p="Commands" t="Include">
-            <e p="CommandsHandler.cs" t="Include" />
+            <e p="CommandsEventHandler.cs" t="Include" />
             <e p="PlayerSetCommand.cs" t="Include" />
             <e p="SelectNextPlayerCommand.cs" t="Include" />
             <e p="StartNewGameCommand.cs" t="Include" />

@@ -5,14 +5,14 @@ using TicTacToe.EventSourcing.Wpf.Game.Events;
 namespace TicTacToe.EventSourcing.Wpf.Game.Commands
 {
     // ReSharper disable once UnusedMember.Global
-    public class CommandsHandler :
-        IHandler<StartNewGameCommand>, 
-        IHandler<SelectNextPlayerCommand>,
-        IHandler<PlayerSetCommand>
+    public class CommandsEventHandler :
+        ICommandHandler<StartNewGameCommand>, 
+        ICommandHandler<SelectNextPlayerCommand>,
+        ICommandHandler<PlayerSetCommand>
     {
         private readonly EventContext _context;
 
-        public CommandsHandler(EventContext context)
+        public CommandsEventHandler(EventContext context)
         {
             _context = context;
         }
